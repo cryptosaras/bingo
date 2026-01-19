@@ -1,0 +1,527 @@
+@import "tailwindcss";
+
+:root {
+  /* Memphis 80s/90s Color Palette */
+  --memphis-green: #5AE35A;
+  --memphis-pink: #FF6B9D;
+  --memphis-yellow: #FFD93D;
+  --memphis-blue: #3D8BFF;
+  --memphis-purple: #B06EFF;
+  --memphis-orange: #FF9F45;
+  --memphis-cyan: #6BFFF9;
+  --memphis-red: #FF6B6B;
+
+  /* Ball colors - vibrant 80s palette */
+  --ball-b: #3D8BFF;  /* Electric Blue */
+  --ball-i: #FF6B6B;  /* Coral Red */
+  --ball-n: #FFD93D;  /* Sunny Yellow */
+  --ball-g: #5AE35A;  /* Neon Green */
+  --ball-o: #B06EFF;  /* Vivid Purple */
+
+  /* Card colors */
+  --card-bg: #FFFFFF;
+  --card-border: #000000;
+  --card-shadow: 6px 6px 0px #000000;
+
+  /* Text colors */
+  --text-primary: #000000;
+  --text-secondary: #444444;
+}
+
+/* Memphis Background Pattern */
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--memphis-green);
+  color: var(--text-primary);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  position: relative;
+}
+
+/* Memphis pattern overlay using pseudo-element */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    /* Zigzags */
+    url("data:image/svg+xml,%3Csvg width='40' height='20' viewBox='0 0 40 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 10 L10 0 L20 10 L30 0 L40 10' stroke='%23FFFFFF' stroke-width='2' fill='none'/%3E%3C/svg%3E"),
+    /* Dots */
+    url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='2' fill='%23FFFFFF' fill-opacity='0.5'/%3E%3C/svg%3E"),
+    /* Plus signs */
+    url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15 5 L15 25 M5 15 L25 15' stroke='%23FFFFFF' stroke-width='2' stroke-opacity='0.4'/%3E%3C/svg%3E"),
+    /* X marks */
+    url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 4 L8 8 M8 4 L4 8' stroke='%23FFFFFF' stroke-width='2' stroke-opacity='0.3'/%3E%3C/svg%3E");
+  background-position: 0 0, 50px 50px, 100px 25px, 75px 75px;
+  background-size: 80px 40px, 40px 40px, 60px 60px, 48px 48px;
+  opacity: 0.6;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* Memphis Card Style */
+.memphis-card {
+  background: var(--card-bg);
+  border: 4px solid var(--card-border);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.memphis-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px #000000;
+}
+
+/* Memphis Button Base */
+.memphis-btn {
+  border: 3px solid #000000;
+  border-radius: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 4px 4px 0px #000000;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.memphis-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px #000000;
+}
+
+.memphis-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #000000;
+}
+
+.memphis-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 4px 4px 0px #000000;
+}
+
+/* Memphis Input */
+.memphis-input {
+  border: 3px solid #000000;
+  border-radius: 12px;
+  background: #FFFFFF;
+  padding: 12px 16px;
+  font-weight: 500;
+  box-shadow: inset 2px 2px 0px rgba(0,0,0,0.1);
+}
+
+.memphis-input:focus {
+  outline: none;
+  box-shadow: inset 2px 2px 0px rgba(0,0,0,0.1), 0 0 0 3px var(--memphis-cyan);
+}
+
+/* Ball styling with 3D effect */
+.memphis-ball {
+  border: 4px solid #000000;
+  box-shadow: 4px 4px 0px #000000;
+  position: relative;
+}
+
+.memphis-ball::after {
+  content: "";
+  position: absolute;
+  top: 15%;
+  left: 20%;
+  width: 25%;
+  height: 25%;
+  background: rgba(255,255,255,0.6);
+  border-radius: 50%;
+}
+
+/* Animations */
+@keyframes bounce-once {
+  0%, 100% { transform: translateY(0) scale(1); }
+  25% { transform: translateY(-20px) scale(1.05); }
+  50% { transform: translateY(0) scale(1); }
+  75% { transform: translateY(-10px) scale(1.02); }
+}
+
+@keyframes bounce-continuous {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-15px) scale(1.03);
+  }
+}
+
+@keyframes roll-in {
+  0% {
+    transform: translateX(-200px) rotate(-360deg) scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(20px) rotate(20deg) scale(1.1);
+    opacity: 1;
+  }
+  70% {
+    transform: translateX(-10px) rotate(-10deg) scale(1);
+  }
+  100% {
+    transform: translateX(0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Idle state - calm, gentle floating */
+@keyframes float-idle {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-8px) translateX(3px) rotate(2deg);
+  }
+  50% {
+    transform: translateY(-12px) translateX(0px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-8px) translateX(-3px) rotate(-2deg);
+  }
+}
+
+/* Active state - rapid, energetic movement */
+@keyframes float-active {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
+  }
+  10% {
+    transform: translateY(-15px) translateX(10px) rotate(8deg) scale(1.05);
+  }
+  20% {
+    transform: translateY(-25px) translateX(-5px) rotate(-5deg) scale(0.95);
+  }
+  30% {
+    transform: translateY(-10px) translateX(15px) rotate(10deg) scale(1.1);
+  }
+  40% {
+    transform: translateY(-30px) translateX(-10px) rotate(-8deg) scale(0.98);
+  }
+  50% {
+    transform: translateY(-5px) translateX(8px) rotate(5deg) scale(1.05);
+  }
+  60% {
+    transform: translateY(-20px) translateX(-15px) rotate(-10deg) scale(0.95);
+  }
+  70% {
+    transform: translateY(-35px) translateX(5px) rotate(12deg) scale(1.08);
+  }
+  80% {
+    transform: translateY(-15px) translateX(-8px) rotate(-6deg) scale(1);
+  }
+  90% {
+    transform: translateY(-28px) translateX(12px) rotate(4deg) scale(1.02);
+  }
+}
+
+/* Drift animation for variety */
+@keyframes drift {
+  0%, 100% {
+    transform: translateX(0px) translateY(0px);
+  }
+  33% {
+    transform: translateX(20px) translateY(-15px);
+  }
+  66% {
+    transform: translateX(-15px) translateY(-8px);
+  }
+}
+
+@keyframes drift-active {
+  0%, 100% {
+    transform: translateX(0px) translateY(0px) rotate(0deg);
+  }
+  16% {
+    transform: translateX(25px) translateY(-20px) rotate(15deg);
+  }
+  33% {
+    transform: translateX(-20px) translateY(-35px) rotate(-10deg);
+  }
+  50% {
+    transform: translateX(30px) translateY(-15px) rotate(20deg);
+  }
+  66% {
+    transform: translateX(-15px) translateY(-40px) rotate(-15deg);
+  }
+  83% {
+    transform: translateX(20px) translateY(-25px) rotate(10deg);
+  }
+}
+
+/* Orbit animation */
+@keyframes orbit {
+  0% {
+    transform: rotate(0deg) translateX(10px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(10px) rotate(-360deg);
+  }
+}
+
+@keyframes orbit-active {
+  0% {
+    transform: rotate(0deg) translateX(20px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(20px) rotate(-360deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 4px 4px 0px #000000, 0 0 20px var(--memphis-yellow); }
+  50% { box-shadow: 4px 4px 0px #000000, 0 0 40px var(--memphis-yellow); }
+}
+
+.animate-bounce-once {
+  animation: bounce-once 0.6s ease-out;
+}
+
+.animate-bounce-continuous {
+  animation: bounce-continuous 0.8s ease-in-out infinite;
+}
+
+.animate-wiggle {
+  animation: wiggle 0.5s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+.animate-roll-in {
+  animation: roll-in 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Decorative shapes */
+.shape-triangle {
+  width: 0;
+  height: 0;
+  border-left: 25px solid transparent;
+  border-right: 25px solid transparent;
+  border-bottom: 43px solid var(--memphis-pink);
+  filter: drop-shadow(3px 3px 0px #000000);
+}
+
+.shape-triangle-sm {
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 26px solid var(--memphis-cyan);
+  filter: drop-shadow(2px 2px 0px #000000);
+}
+
+.shape-triangle-lg {
+  width: 0;
+  height: 0;
+  border-left: 35px solid transparent;
+  border-right: 35px solid transparent;
+  border-bottom: 60px solid var(--memphis-orange);
+  filter: drop-shadow(4px 4px 0px #000000);
+}
+
+.shape-circle {
+  width: 40px;
+  height: 40px;
+  background: var(--memphis-yellow);
+  border-radius: 50%;
+  border: 3px solid #000000;
+  box-shadow: 3px 3px 0px #000000;
+}
+
+.shape-circle-sm {
+  width: 25px;
+  height: 25px;
+  background: var(--memphis-blue);
+  border-radius: 50%;
+  border: 2px solid #000000;
+  box-shadow: 2px 2px 0px #000000;
+}
+
+.shape-circle-lg {
+  width: 55px;
+  height: 55px;
+  background: var(--memphis-red);
+  border-radius: 50%;
+  border: 4px solid #000000;
+  box-shadow: 4px 4px 0px #000000;
+}
+
+.shape-square {
+  width: 35px;
+  height: 35px;
+  background: var(--memphis-purple);
+  border: 3px solid #000000;
+  box-shadow: 3px 3px 0px #000000;
+  transform: rotate(15deg);
+}
+
+.shape-square-sm {
+  width: 22px;
+  height: 22px;
+  background: var(--memphis-green);
+  border: 2px solid #000000;
+  box-shadow: 2px 2px 0px #000000;
+  transform: rotate(25deg);
+}
+
+.shape-diamond {
+  width: 30px;
+  height: 30px;
+  background: var(--memphis-pink);
+  border: 3px solid #000000;
+  box-shadow: 3px 3px 0px #000000;
+  transform: rotate(45deg);
+}
+
+.shape-cross {
+  width: 30px;
+  height: 30px;
+  position: relative;
+}
+
+.shape-cross::before,
+.shape-cross::after {
+  content: '';
+  position: absolute;
+  background: var(--memphis-cyan);
+  border: 2px solid #000000;
+}
+
+.shape-cross::before {
+  width: 10px;
+  height: 30px;
+  left: 10px;
+  top: 0;
+}
+
+.shape-cross::after {
+  width: 30px;
+  height: 10px;
+  left: 0;
+  top: 10px;
+}
+
+.shape-donut {
+  width: 35px;
+  height: 35px;
+  background: transparent;
+  border-radius: 50%;
+  border: 8px solid var(--memphis-orange);
+  box-shadow: 2px 2px 0px #000000;
+}
+
+/* Animation classes - Idle state */
+.animate-float-idle {
+  animation: float-idle 4s ease-in-out infinite;
+}
+
+.animate-drift-idle {
+  animation: drift 6s ease-in-out infinite;
+}
+
+.animate-orbit-idle {
+  animation: orbit 12s linear infinite;
+}
+
+/* Animation classes - Active state */
+.animate-float-active {
+  animation: float-active 1.2s ease-in-out infinite;
+}
+
+.animate-drift-active {
+  animation: drift-active 2s ease-in-out infinite;
+}
+
+.animate-orbit-active {
+  animation: orbit-active 4s linear infinite;
+}
+
+/* Winner celebration */
+.winner-alert {
+  background: linear-gradient(135deg, var(--memphis-yellow) 0%, var(--memphis-orange) 100%);
+  border: 4px solid #000000;
+  box-shadow: 6px 6px 0px #000000;
+  animation: pulse-glow 1s ease-in-out infinite;
+}
+
+/* Near win highlight */
+.near-win {
+  background: linear-gradient(135deg, var(--memphis-pink) 0%, var(--memphis-orange) 100%);
+  border: 3px solid #000000;
+  box-shadow: 4px 4px 0px #000000;
+}
+
+/* Modal overlay */
+.memphis-modal-overlay {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+/* Header gradient */
+.memphis-header {
+  background: linear-gradient(135deg, var(--memphis-yellow) 0%, var(--memphis-orange) 50%, var(--memphis-pink) 100%);
+  border-bottom: 4px solid #000000;
+}
+
+/* Grid number cells */
+.number-cell {
+  border: 2px solid #000000;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.number-cell.called {
+  transform: scale(1.05);
+  box-shadow: 2px 2px 0px #000000;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--memphis-green);
+  border: 2px solid #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--memphis-pink);
+  border: 2px solid #000000;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--memphis-purple);
+}
