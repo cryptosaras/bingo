@@ -25,6 +25,13 @@ class SoundService {
     this.playEffect('/sounds/lotto-ball.mp3');
   }
 
+  playWin() {
+    if (!this.isEnabled) return;
+    const audio = this.createAudio('/sounds/win.mp3');
+    audio.volume = 1.0; // 100% volume
+    audio.play().catch(() => {});
+  }
+
   startBackground(track: 'wait' | 'bingo') {
     if (!this.isEnabled) return;
 

@@ -3,9 +3,38 @@ import { useGameStore } from '../../stores/gameStore';
 import { BALL_COLORS } from '../../types';
 import { translations as t } from '../../utils/translations';
 
+// Win celebration GIFs
+const WIN_GIFS = [
+  'Baby Success GIF.gif',
+  'update success GIF.gif',
+  'happy celebration GIF by Tennis TV.gif',
+  'Fist Pump Yes GIF by JSTCompete.gif',
+  'Celebrate Winning Streak GIF by Big Time Gaming.gif',
+  'Slot Machines Casino GIF by BCSlots.com.gif',
+  'Slot Machine Money GIF by Jess.gif',
+  'Pay Day Money GIF.gif',
+  'Make It Rain Money GIF by yvngswag.gif',
+  'Pay Day Money GIF by MOST EXPENSIVEST.gif',
+  'Get Your Billion Back Make It Rain GIF by Billion Back Records.gif',
+  'Make It Rain Money GIF.gif',
+  'Make It Rain Money GIF by SpongeBob SquarePants.gif',
+  'Pay Me Kim Kardashian GIF by GQ.gif',
+  'Dance Winning GIF.gif',
+  'winner GIF.gif',
+  'Happy The Office GIF by Imaginal Biotech.gif',
+  'Winner Winner Dance GIF.gif',
+  'Happy Football GIF by Piñata Farms The Meme App.gif',
+  'Happy Spongebob Squarepants GIF by Bombay Softwares.gif',
+  'Happy Fun GIF by reactionseditor.gif',
+  'Celebrate Mr Bean GIF by Working Title.gif',
+  'Excited Season 6 GIF by The Office.gif',
+  'Michael Van Gerwen Yes GIF by DAZN.gif',
+];
+
 export function WinTracker() {
   const { ticketStatuses, activeTicketIds, status, calledBalls } = useGameStore();
   const [bouncingBalls, setBouncingBalls] = useState<Set<number>>(new Set());
+  const [winGif, setWinGif] = useState<string | null>(null);
 
   // Random bounce effect for last 5 balls
   const triggerRandomBounce = useCallback(() => {
@@ -48,10 +77,25 @@ export function WinTracker() {
     };
   }, [calledBalls.length, triggerRandomBounce]);
 
-  const last5Balls = [...calledBalls].reverse().slice(0, 5);
-
   const statuses = Object.values(ticketStatuses);
   const winnerCount = statuses.filter(s => s.hasWon).length;
+
+  // Pick random GIF on first win, reset on game reset
+  useEffect(() => {
+    if (winnerCount > 0 && !winGif) {
+      const randomGif = WIN_GIFS[Math.floor(Math.random() * WIN_GIFS.length)];
+      setWinGif(randomGif);
+    }
+  }, [winnerCount, winGif]);
+
+  // Reset GIF when game resets
+  useEffect(() => {
+    if (status === 'idle') {
+      setWinGif(null);
+    }
+  }, [status]);
+
+  const last5Balls = [...calledBalls].reverse().slice(0, 5);
 
   const countByBallsNeeded: Record<number, number> = {};
   statuses.forEach(s => {
@@ -133,6 +177,19 @@ export function WinTracker() {
                 <div className="text-black font-bold mt-1">
                   {t.winningTickets(winnerCount)}
                 </div>
+                {winGif && (
+                  <div className="mt-3 flex justify-center">
+                    <img
+                      src={`/win_gif/${encodeURIComponent(winGif)}`}
+                      alt="Winner celebration"
+                      className="rounded-lg border-3 border-black shadow-[3px_3px_0px_#000]"
+                      style={{
+                        width: '350px',
+                        height: 'auto',
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             )}
 

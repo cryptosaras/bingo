@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useGameStore } from '../../stores/gameStore';
 import { speechService } from '../../services/speechService';
 import { soundService } from '../../services/soundService';
@@ -6,6 +6,10 @@ import { translations as t } from '../../utils/translations';
 
 export function GameControls() {
   const [ticketInput, setTicketInput] = useState('');
+  const [autoDrawEnabled, setAutoDrawEnabled] = useState(false);
+  const [countdown, setCountdown] = useState(10);
+  const autoDrawIntervalRef = useRef<number | null>(null);
+  const countdownIntervalRef = useRef<number | null>(null);
   const {
     status,
     startNewGame,
@@ -14,16 +18,73 @@ export function GameControls() {
     toggleVoice,
     voiceEnabled,
     resetGame,
-    activeTicketIds
+    activeTicketIds,
+    ticketStatuses,
+    remainingBalls
   } = useGameStore();
 
-  const handleRollBall = () => {
+  const handleRollBall = useCallback(() => {
     const ball = rollBall();
     if (ball && voiceEnabled) {
       soundService.playBallRoll();
       speechService.announce(ball.number);
     }
-  };
+  }, [rollBall, voiceEnabled]);
+
+  // Check if any ticket has won
+  const hasWinner = Object.values(ticketStatuses).some(s => s.hasWon);
+
+  // Auto-draw effect
+  useEffect(() => {
+    // Clear existing intervals
+    if (autoDrawIntervalRef.current) {
+      clearInterval(autoDrawIntervalRef.current);
+      autoDrawIntervalRef.current = null;
+    }
+    if (countdownIntervalRef.current) {
+      clearInterval(countdownIntervalRef.current);
+      countdownIntervalRef.current = null;
+    }
+
+    // Stop conditions: game not active, no active tickets, winner found, or all balls drawn
+    if (
+      !autoDrawEnabled ||
+      status !== 'active' ||
+      activeTicketIds.length === 0 ||
+      hasWinner ||
+      remainingBalls.length === 0
+    ) {
+      if (autoDrawEnabled && (hasWinner || remainingBalls.length === 0 || activeTicketIds.length === 0)) {
+        setAutoDrawEnabled(false);
+      }
+      setCountdown(10);
+      return;
+    }
+
+    // Reset countdown
+    setCountdown(10);
+
+    // Start countdown interval (every 1 second)
+    countdownIntervalRef.current = window.setInterval(() => {
+      setCountdown(prev => (prev <= 1 ? 10 : prev - 1));
+    }, 1000);
+
+    // Start auto-draw interval
+    autoDrawIntervalRef.current = window.setInterval(() => {
+      handleRollBall();
+    }, 10000);
+
+    return () => {
+      if (autoDrawIntervalRef.current) {
+        clearInterval(autoDrawIntervalRef.current);
+        autoDrawIntervalRef.current = null;
+      }
+      if (countdownIntervalRef.current) {
+        clearInterval(countdownIntervalRef.current);
+        countdownIntervalRef.current = null;
+      }
+    };
+  }, [autoDrawEnabled, status, activeTicketIds.length, hasWinner, remainingBalls.length, handleRollBall]);
 
   const handleStartGame = () => {
     startNewGame();
@@ -98,7 +159,7 @@ export function GameControls() {
               disabled={status !== 'active'}
               className="memphis-btn flex-1 px-4 py-3 bg-[#3D8BFF] text-white hover:bg-[#2D7BEF] disabled:bg-gray-300 disabled:text-gray-500"
             >
-              {t.rollBall}
+              {autoDrawEnabled ? `${t.rollBall} (${countdown}s)` : t.rollBall}
             </button>
             <button
               onClick={resetGame}
@@ -122,6 +183,22 @@ export function GameControls() {
         `}
       >
         {voiceEnabled ? t.voiceOn : t.voiceOff}
+      </button>
+
+      {/* Auto Draw Toggle */}
+      <button
+        onClick={() => setAutoDrawEnabled(!autoDrawEnabled)}
+        disabled={status !== 'active'}
+        className={`
+          memphis-btn w-full px-4 py-2.5 font-bold
+          ${autoDrawEnabled
+            ? 'bg-[#FF9F45] text-black hover:bg-[#EF8F35]'
+            : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+          }
+          disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed
+        `}
+      >
+        {autoDrawEnabled ? t.autoDrawOn : t.autoDrawOff}
       </button>
 
       {/* Ticket Input */}

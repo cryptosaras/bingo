@@ -31,6 +31,8 @@ export const translations = {
   enterTicketNumbers: 'Įveskite bilietų numerius...',
   set: 'Nustatyti',
   trackingTickets: (count: number) => `Sekama ${count} bilietų`,
+  autoDrawOn: 'Automatinis traukimas: ĮJUNGTAS',
+  autoDrawOff: 'Automatinis traukimas: IŠJUNGTAS',
 
   // Ball History
   ballHistory: 'Iškritusių kamuoliukų istorija',
@@ -45,7 +47,7 @@ export const translations = {
   ticketsInPlay: 'Bilietų žaidime',
   ballsCalled: 'Ištraukta kamuoliukų',
   bingo: 'BINGO!',
-  winningTickets: (count: number) => `${count} laimėjęs${count > 1 ? 'i bilietai' : ' bilietas'}!`,
+  winningTickets: (count: number) => `${count} laimėję${count > 1 ? ' bilietai' : 's bilietas'}!`,
   closeToWin: 'Arti laimėjimo',
   need1Ball: 'Trūksta 1 kamuoliuko',
   need2Balls: 'Trūksta 2 kamuoliukų',
